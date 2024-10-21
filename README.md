@@ -1,2 +1,2 @@
 # ST_QA_course
-QA-homework
+QA-homework for course
