@@ -1,0 +1,39 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import math
+import time
+
+def calc(x):
+    return str(math.log(abs(12 * math.sin(int(x)))))
+
+def print_answer(remote: webdriver.Remote):
+    alert = remote.switch_to.alert
+    print(alert.text.split()[-1])
+    alert.accept()
+
+try:
+    link = "https://suninjuly.github.io/execute_script.html"
+    browser = webdriver.Chrome()
+    browser.get(link)
+
+    #x_element = int(browser.find_element(By.ID, "input_value").text)
+    func_result = calc(int(browser.find_element(By.ID, "input_value").text))
+
+    func_answer = browser.find_element(By.CSS_SELECTOR, "#answer")
+    browser.execute_script("return arguments[0].scrollIntoView(true);", func_answer)
+    func_answer.send_keys(func_result)
+
+    elements_to_select = tuple(("[id = 'robotCheckbox']", "[id = 'robotsRule']", "button.btn"))
+
+    for elem in elements_to_select:
+        browser.find_element(By.CSS_SELECTOR, elem).click()
+
+    time.sleep(1)
+
+    print_answer(browser)
+
+finally:
+    # ожидание чтобы визуально оценить результаты прохождения скрипта
+    time.sleep(4)
+    # закрываем браузер после всех манипуляций
+    browser.quit()
